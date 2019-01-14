@@ -142,7 +142,6 @@ def create_libris_links():
 
 @app.route('/libris/<path:uri>')
 def libris(uri):
-    print(uri)
     lookup_url = 'https://libris-stg.kb.se/{}/data.jsonld'
 
     res = libreq.get(lookup_url.format(uri))
