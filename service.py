@@ -30,6 +30,12 @@ def index():
         '/wiki/Mars (planet)',
         '/wiki/Ada Yonath',
         '/wiki/Jens Christian Skou',
+        '/libris/https://id.kb.se/term/sao/Kemi',
+        '/libris/https://id.kb.se/term/sao/Nobelpriset i kemi',
+        '/libris/https://id.kb.se/term/sao/Kemisk struktur',
+        '/libris/https://id.kb.se/term/sao/Medicinsk kemi',
+        '/libris/https://id.kb.se/term/sao/Mars (planet) i litteraturen',
+        '/libris/https://id.kb.se/term/sao/Mars (planet)',
     ]
     hrefs = list(map(
         lambda url: '<a href="{0}">{0}</a>'.format(url),
@@ -63,7 +69,11 @@ def wiki(title):
     title_wiki = page['title']
     desc = '<br>'.join(page['terms']['description']) \
         if 'description' in page['terms'] else ''
-    img_src = page['thumbnail']['source']
+    img_name = page['pageimage']
+
+    img_response = requests.get('https://commons.wikimedia.org/w/api.php?action=query&format=json&prop=imageinfo&titles=File:{img_name}&iiprop=url'.format(img_name=img_name)).json()
+    img_id = list(img_response['query']['pages'].keys())[0]
+    img_src = img_response['query']['pages'][img_id]['imageinfo'][0]['url']
 
     libris_urls = set()
     title_wiki_url_fmt = title.replace(' ', '_')
@@ -80,7 +90,7 @@ def wiki(title):
         body='''
 <h2>Wikipedia: {header}</h2>
 <p>{desc}</p>
-<img src="{img_src}">
+<img src="{img_src}" style="max-width:300px;">
 <p>Källa: {source}</p>
 <h3>Det här ämnet i Libris</h3>
 <p>{libris_hrefs}</p>
@@ -141,13 +151,13 @@ def libris(uri):
             link = elem['uri_wikipedia']
             wiki_links.append('<a href="{}">{}</a>'.format(link, link))
     return HTML_BOILERPLATE.format(
-        title=title,
+        title=title + ' - ',
         body='''
-<h1>Libris: {header}</h1>
+<h2>Libris: {header}</h2>
 <p>{desc}</p>
-<h2>Wikipedia-artiklar</h2>
+<h3>Wikipedia-artiklar</h3>
 <p>{wiki_links}</p>
-<h2>Libris-poster</h2>
+<h3>Libris-poster</h3>
 <p>{bib_posts}</p>
 '''.format(
             header=uri,
