@@ -1,0 +1,30 @@
+[
+    {
+        "uri_wikipedia": "https://sv.wikipedia.org/wiki/Mars_(planet)",
+        "uri_libris": "https://id.kb.se/term/sao/Mars%20%28planet%29"
+    },
+    {
+        "uri_wikipedia": "https://sv.wikipedia.org/wiki/Mars_(planet)",
+        "uri_libris": "https://id.kb.se/term/sao/Mars%20%28planet%29%20i%20litteraturen"
+    },
+    {
+        "uri_wikipedia": "https://sv.wikipedia.org/wiki/Ada_Yonath",
+        "uri_libris": "https://id.kb.se/term/sao/Medicinsk%20kemi"
+    },
+    {
+        "uri_wikipedia": "https://sv.wikipedia.org/wiki/Ada_Yonath",
+        "uri_libris": "https://id.kb.se/term/sao/Kemisk%20struktur"
+    },
+    {
+        "uri_wikipedia": "https://sv.wikipedia.org/wiki/Ada_Yonath",
+        "uri_libris": "https://id.kb.se/term/sao/Nobelpriset%20i%20kemi"
+    },
+    {
+        "uri_wikipedia": "https://sv.wikipedia.org/wiki/Jens_Christian_Skou",
+        "uri_libris": "https://id.kb.se/term/sao/Nobelpriset%20i%20kemi"
+    },
+    {
+        "uri_wikipedia": "https://sv.wikipedia.org/wiki/Jens_Christian_Skou",
+        "uri_libris": "https://id.kb.se/term/sao/Kemi"
+    }
+]
