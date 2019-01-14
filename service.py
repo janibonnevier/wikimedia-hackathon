@@ -15,7 +15,7 @@ HTML_BOILERPLATE = '''
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>{title}Libris-Wikipedia-länkar</title>
     </head>
-    <body><h1>Libris-Wikipedia-länkar</h1>{body}</body>
+    <body><h1><a href="/">Libris-Wikipedia-länkar</a></h1>{body}</body>
 </html>
 '''
 
