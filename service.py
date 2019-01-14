@@ -26,29 +26,37 @@ libreq.headers.update({'Accept': 'application/ld+json'})
 
 @app.route('/')
 def index():
-    urls = [
-        '/wiki/Mars (planet)',
-        '/wiki/Ada Yonath',
-        '/wiki/Jens Christian Skou',
-        '/libris/https://id.kb.se/term/sao/Kemi',
-        '/libris/https://id.kb.se/term/sao/Nobelpriset i kemi',
-        '/libris/https://id.kb.se/term/sao/Kemisk struktur',
-        '/libris/https://id.kb.se/term/sao/Medicinsk kemi',
-        '/libris/https://id.kb.se/term/sao/Mars (planet) i litteraturen',
-        '/libris/https://id.kb.se/term/sao/Mars (planet)',
-    ]
-    hrefs = list(map(
-        lambda url: '<a href="{0}">{0}</a>'.format(url),
-        urls,
-    ))
+    wiki_urls = get_wiki_urls()
+    libris_urls = get_libris_urls()
     return HTML_BOILERPLATE.format(
         title='',
         body='''
-<p>{hrefs}</p>
+<h3>Wikipedia-artiklar</h3>
+<p>{wiki_urls}</p>
+<h3>Libris-resurser</h3>
+<p>{libris_urls}</p>
 '''.format(
-            hrefs='<br>'.join(hrefs),
+            wiki_urls='<br>'.join(wiki_urls),
+            libris_urls='<br>'.join(libris_urls),
         ),
     )
+
+
+def get_wiki_urls():
+    base = 'https://sv.wikipedia.org/wiki/'
+    urls = set([e['uri_wikipedia'][len(base):] for e in DATA])
+    return list(map(
+        lambda url: '<a href="/wiki/{0}">{0}</a>'.format(url),
+        sorted(list(urls)),
+    ))
+
+
+def get_libris_urls():
+    urls = set([e['uri_libris'] for e in DATA])
+    return list(map(
+        lambda url: '<a href="/libris/{0}">{0}</a>'.format(url),
+        sorted(list(urls)),
+    ))
 
 
 @app.route('/wiki/<title>')
