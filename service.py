@@ -95,6 +95,29 @@ def wiki(title):
     )
 
 
+@app.route('/libris')
+def list_libris_resources():
+    links = create_libris_links()
+    return HTML_BOILERPLATE.format(
+        title='Libris-resurser',
+        body='''
+<h2>Libris-resurser</h2>
+<p>{libris_hrefs}</p>
+'''.format(
+            libris_hrefs='<br>'.join(links),
+        ),
+    )
+
+
+def create_libris_links():
+    links = set()
+    for elem in DATA:
+        link = '<a href="/libris/{}">{}</a>'
+        libris_uri = elem['uri_libris']
+        links.add(link.format(libris_uri, libris_uri))
+    return sorted(list(links))
+
+
 @app.route('/libris/<path:uri>')
 def libris(uri):
     print(uri)
