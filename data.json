@@ -5,6 +5,18 @@
     },
     {
         "uri_wikipedia": "https://sv.wikipedia.org/wiki/Mars_(planet)",
+        "uri_libris": "https://id.kb.se/term/sao/Solsystemet"
+    },
+    {
+        "uri_wikipedia": "https://sv.wikipedia.org/wiki/Jupiter",
+        "uri_libris": "https://id.kb.se/term/sao/Solsystemet"
+    },
+    {
+        "uri_wikipedia": "https://sv.wikipedia.org/wiki/Jupiter",
+        "uri_libris": "https://id.kb.se/term/sao/Jupiter (planet)"
+    },
+    {
+        "uri_wikipedia": "https://sv.wikipedia.org/wiki/Mars_(planet)",
         "uri_libris": "https://id.kb.se/term/sao/Mars (planet) i litteraturen"
     },
     {
