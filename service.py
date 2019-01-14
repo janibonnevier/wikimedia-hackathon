@@ -79,7 +79,11 @@ def wiki(title):
         if 'description' in page['terms'] else ''
     img_name = page['pageimage']
 
-    img_response = requests.get('https://commons.wikimedia.org/w/api.php?action=query&format=json&prop=imageinfo&titles=File:{img_name}&iiprop=url'.format(img_name=img_name)).json()
+    img_response = requests.get(
+        'https://commons.wikimedia.org/w/api.php?action=query&format=json&'
+        'prop=imageinfo&titles=File:{img_name}&iiprop=url'.format(
+            img_name=img_name,
+        )).json()
     img_id = list(img_response['query']['pages'].keys())[0]
     img_src = img_response['query']['pages'][img_id]['imageinfo'][0]['url']
 
@@ -89,7 +93,7 @@ def wiki(title):
         if title_wiki_url_fmt in rel['uri_wikipedia']:
             libris_urls.add(rel['uri_libris'])
     libris_hrefs = list(map(
-        lambda url: '<a href="{0}">{0}</a>'.format(url),
+        lambda url: '<a href="/libris/{0}">/libris/{0}</a>'.format(url),
         libris_urls,
     ))
 
@@ -157,7 +161,12 @@ def libris(uri):
     for elem in DATA:
         if elem['uri_libris'] == uri:
             link = elem['uri_wikipedia']
-            wiki_links.append('<a href="{}">{}</a>'.format(link, link))
+            wiki_title = link\
+                .replace('https://sv.wikipedia.org/wiki/', '')\
+                .replace('_', ' ')
+            wiki_links.append('<a href="/wiki/{0}">/wiki/{0}</a>'.format(
+                wiki_title
+            ))
     return HTML_BOILERPLATE.format(
         title=title + ' - ',
         body='''
