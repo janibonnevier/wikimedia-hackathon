@@ -199,7 +199,7 @@ def get_libris_relations(data):
 
 def build_libris_reverse_query(entity_id, post_type):
     query = {}
-    if post_type == 'Topic':
-        query['instanceOf.subject.@id'] = entity_id
+    # TODO: this should depend on post_type.
+    query['instanceOf.subject.@id'] = entity_id
 
     return query
