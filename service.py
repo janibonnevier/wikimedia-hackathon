@@ -13,16 +13,32 @@ HTML_BOILERPLATE = '''
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>{title}</title>
+        <title>{title}Libris-Wikipedia-länkar</title>
     </head>
-    <body>{body}</body>
+    <body><h1>Libris-Wikipedia-länkar</h1>{body}</body>
 </html>
 '''
 
 
 @app.route('/')
 def index():
-    return 'Hello World!'
+    urls = [
+        '/wiki/Mars (planet)',
+        '/wiki/Ada Yonath',
+        '/wiki/Jens Christian Skou',
+    ]
+    hrefs = list(map(
+        lambda url: '<a href="{0}">{0}</a>'.format(url),
+        urls,
+    ))
+    return HTML_BOILERPLATE.format(
+        title='',
+        body='''
+<p>{hrefs}</p>
+'''.format(
+            hrefs='<br>'.join(hrefs),
+        ),
+    )
 
 
 @app.route('/wiki/<title>')
@@ -56,13 +72,13 @@ def wiki(title):
     ))
 
     return HTML_BOILERPLATE.format(
-        title=title_wiki,
+        title=title_wiki + ' - ',
         body='''
-<h1>Wikipedia: {header}</h1>
+<h2>Wikipedia: {header}</h2>
 <p>{desc}</p>
 <img src="{img_src}">
 <p>Källa: {source}</p>
-<h2>Det här ämnet i Libris</h2>
+<h3>Det här ämnet i Libris</h3>
 <p>{libris_hrefs}</p>
 '''.format(
             header=title_wiki,
