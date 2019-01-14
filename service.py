@@ -1,7 +1,7 @@
 import json
-
 import requests
-from flask import Flask
+
+from flask import Flask, abort
 
 app = Flask(__name__)
 
@@ -18,6 +18,10 @@ HTML_BOILERPLATE = '''
     <body><h1>Libris-Wikipedia-länkar</h1>{body}</body>
 </html>
 '''
+
+
+libreq = requests.session()
+libreq.headers.update({'Accept': 'application/ld+json'})
 
 
 @app.route('/')
@@ -91,6 +95,62 @@ def wiki(title):
     )
 
 
-@app.route('/libris/<uri>')
-def libris():
-    return 'Hello World!'
+@app.route('/libris/<path:uri>')
+def libris(uri):
+    print(uri)
+    lookup_url = 'https://libris-qa.kb.se/{}/data.jsonld'
+
+    res = libreq.get(lookup_url.format(uri))
+    if res.status_code != 200:
+        abort(res.status_code)
+    data = res.json()
+    title = data['@graph'][1]['prefLabel']
+    relations = get_libris_relations(data)
+    bib_posts = []
+    for rel in relations['items']:
+        main_title = 'unknown'
+        if 'hasTitle' in rel and 'mainTitle' in rel['hasTitle'][0]:
+            main_title = rel['hasTitle'][0]['mainTitle']
+        bib_posts.append('<a href="{}">{}</a>'.format(rel['@id'], main_title))
+    wiki_links = []
+    for elem in DATA:
+        if elem['uri_libris'] == uri:
+            link = elem['uri_wikipedia']
+            wiki_links.append('<a href="{}">{}</a>'.format(link, link))
+    return HTML_BOILERPLATE.format(
+        title=title,
+        body='''
+<h1>Libris: {header}</h1>
+<p>{desc}</p>
+<h2>Wikipedia-artiklar</h2>
+<p>{wiki_links}</p>
+<h2>Libris-poster</h2>
+<p>{bib_posts}</p>
+'''.format(
+            header=uri,
+            desc=title,
+            wiki_links='<br>'.join(wiki_links),
+            bib_posts='<br>'.join(bib_posts),
+        ),
+    )
+
+
+libris_search_url = 'https://libris-qa.kb.se/find.json'
+
+
+def get_libris_relations(data):
+    main_entity = data['@graph'][0]['mainEntity']['@id']
+    post_type = data['@graph'][1]['@type']
+    query = build_libris_reverse_query(main_entity, post_type)
+    res = libreq.get(libris_search_url, params=query)
+    if res.status_code != 200:
+        abort(res.status_code)
+    return res.json()
+
+
+def build_libris_reverse_query(entity_id, post_type):
+    query = {}
+    if post_type == 'Topic':
+        query['instanceOf.subject.@id'] = entity_id
+
+    return query
